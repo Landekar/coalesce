@@ -5,17 +5,86 @@
 }
 
 :root {
-  --bg: #0a0a0a;
-  --surface: #111111;
-  --surface-2: #1a1a1a;
-  --border: #222222;
+  /* Dark theme (default) */
+  --bg: #1a1a1a;
+  --bg-card: #141414;
+  --bg-panel: #161616;
+  --bg-pill: #242424;
+  --bg-pill-active: #e8e8e8;
+
+  --border: #2a2a2a;
+  --border-card: #2e2e2e;
+  --border-strong: #333;
+
   --text-primary: #e8e8e8;
-  --text-secondary: #888888;
-  --text-muted: #444444;
+  --text-secondary: #888;
+  --text-tertiary: #666;
+  --text-muted: #555;
+  --text-dim: #444;
+  --text-faint: #333;
+  --text-ghost: #2a2a2a;
+  --text-on-pill: #0a0a0a;
+  --text-pill-inactive: #999;
+
   --accent: #c8b89a;
+  --accent-dim: rgba(200,184,154,0.3);
+  --accent-subtle: rgba(200,184,154,0.15);
+  --accent-hover: rgba(200,184,154,0.05);
+
+  --overlay-heavy: rgba(0,0,0,0.85);
+  --overlay-medium: rgba(0,0,0,0.72);
+  --overlay-light: rgba(0,0,0,0.4);
+  --overlay-subtle: rgba(0,0,0,0.15);
+  --tag-bg: rgba(255,255,255,0.08);
+  --tag-text: rgba(255,255,255,0.45);
+  --hero-text: rgba(255,255,255,0.55);
+  --hero-text-dim: rgba(255,255,255,0.35);
+  --hero-label: rgba(255,255,255,0.3);
+  --waveform: #c8b89a;
+  --waveform-opacity: 0.5;
+
   --sans: 'Inter', system-ui, sans-serif;
   --serif: 'Georgia', serif;
   --mono: ui-monospace, monospace;
+}
+
+[data-theme="light"] {
+  --bg: #f2f0ec;
+  --bg-card: #ffffff;
+  --bg-panel: #eae7e2;
+  --bg-pill: #e0ddd8;
+  --bg-pill-active: #1a1a1a;
+
+  --border: #d5d2cc;
+  --border-card: #d0cdc6;
+  --border-strong: #bbb8b2;
+
+  --text-primary: #1a1a1a;
+  --text-secondary: #555;
+  --text-tertiary: #777;
+  --text-muted: #888;
+  --text-dim: #999;
+  --text-faint: #bbb;
+  --text-ghost: #d0d0d0;
+  --text-on-pill: #f2f0ec;
+  --text-pill-inactive: #555;
+
+  --accent: #8a7a5a;
+  --accent-dim: rgba(138,122,90,0.3);
+  --accent-subtle: rgba(138,122,90,0.15);
+  --accent-hover: rgba(138,122,90,0.08);
+
+  --overlay-heavy: rgba(0,0,0,0.65);
+  --overlay-medium: rgba(0,0,0,0.55);
+  --overlay-light: rgba(0,0,0,0.3);
+  --overlay-subtle: rgba(0,0,0,0.08);
+  --tag-bg: rgba(0,0,0,0.06);
+  --tag-text: rgba(0,0,0,0.5);
+  --hero-text: rgba(255,255,255,0.85);
+  --hero-text-dim: rgba(255,255,255,0.6);
+  --hero-label: rgba(255,255,255,0.5);
+  --waveform: #8a7a5a;
+  --waveform-opacity: 0.6;
 }
 
 body {
@@ -25,8 +94,33 @@ body {
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  transition: background 0.3s, color 0.3s;
 }
 
 #root {
   min-height: 100vh;
 }
+
+.no-scrollbar::-webkit-scrollbar { display: none }
+
+/* Fade-in-up animation for staggered text reveals */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.anim-fade-up {
+  opacity: 0;
+  animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.anim-delay-1 { animation-delay: 0s; }
+.anim-delay-2 { animation-delay: 0.15s; }
+.anim-delay-3 { animation-delay: 0.3s; }
+.anim-delay-4 { animation-delay: 0.5s; }
