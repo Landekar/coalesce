@@ -8,12 +8,12 @@ Coalesce is a platform that maps art direction as a complete system — color, t
 
 - **Framework:** React 19 + TypeScript (strict mode)
 - **Bundler:** Vite 8 with `@vitejs/plugin-react`
-- **Deployment:** GitHub Pages via `gh-pages` (`npm run deploy`)
-- **Base path:** `/coalesce/` (configured in `vite.config.ts`)
+- **Deployment:** Vercel (primary) + GitHub Pages via `gh-pages` (`npm run deploy`)
+- **Base path:** `/coalesce/` for GitHub Pages; `/` on Vercel (adjust `vite.config.ts` per target)
 - **Styling:** Plain CSS (`src/index.css`), no CSS framework
 - **Routing:** Custom hash-based router (`src/hooks/useHashRouter.ts`)
 - **Image processing:** Sharp (`scripts/convert-images.mjs`), runs as pre-build step
-- **No backend.** All data is in `src/data/genres.ts`. No database, no API.
+- **Backend (Phase 2):** Supabase — project `evqidfxusdzmjpujxdeq` at `https://evqidfxusdzmjpujxdeq.supabase.co`. Keys in `.env.local` (not committed). Phase 1 is still static.
 
 ## Commands
 
