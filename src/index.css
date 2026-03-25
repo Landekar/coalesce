@@ -312,4 +312,20 @@ body {
   .chat-widget-toggle {
     align-self: flex-end;
   }
+
+  .masonry-wall {
+    columns: 2 !important;
+  }
+}
+
+/* Masonry catalog */
+.masonry-wall {
+  columns: 4;
+  column-gap: 10px;
+}
+
+.masonry-tile {
+  break-inside: avoid;
+  margin-bottom: 10px;
+  display: block;
 }
