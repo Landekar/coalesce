@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import type { Genre } from '../data/genres'
 import { genres, galleryImages, assetUrl } from '../data/genres'
+import { getRelated, connectionReason } from '../data/graph'
+import { useUserProfile } from '../hooks/useUserProfile'
 import NavBar from '../components/NavBar'
 import ImageGallery from '../components/ImageGallery'
 import TonePlayer from '../components/TonePlayer'
@@ -111,12 +113,16 @@ export default function GenreWorld({ genre, onBack, onHome, onSelectGenre, onSea
   const [activeTab, setActiveTab] = useState<Tab>('images')
   const [toneOpen, setToneOpen] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const { profile, recordVisit } = useUserProfile()
 
   useEffect(() => {
     setToneOpen(false)
     setActiveTab('images')
     scrollRef.current?.scrollTo(0, 0)
-  }, [genre.id])
+    recordVisit(genre.id)
+  }, [genre.id]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const related = getRelated(genre.id, 3, profile.path, profile.visits)
 
   // Genre navigation: ordered list of all available genres
   const availableGenres = genres.filter(g => g.status === 'available')
@@ -420,6 +426,54 @@ export default function GenreWorld({ genre, onBack, onHome, onSelectGenre, onSea
               </div>
             )}
           </div>
+
+          {/* CONTINUE YOUR JOURNEY */}
+          {related.length > 0 && (
+            <div style={{ padding: '48px 48px 0', borderTop: '1px solid var(--border)', marginTop: '48px' }}>
+              <div style={{ fontSize: '10px', letterSpacing: '0.25em', color: 'var(--text-faint)', textTransform: 'uppercase', marginBottom: '24px' }}>
+                Continue your journey
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+                {related.map(relId => {
+                  const relGenre = genres.find(g => g.id === relId)
+                  if (!relGenre) return null
+                  const reason = connectionReason(genre.id, relId)
+                  const c = relGenre.coverColors
+                  return (
+                    <div
+                      key={relId}
+                      onClick={() => onSelectGenre(relId)}
+                      style={{
+                        position: 'relative',
+                        height: '180px',
+                        borderRadius: '8px',
+                        overflow: 'hidden',
+                        cursor: 'pointer',
+                        background: relGenre.heroImage
+                          ? `url(${assetUrl(relGenre.heroImage)}) center/cover no-repeat`
+                          : `linear-gradient(160deg, ${c[0]}, ${c[1]}, ${c.at(2) ?? c[1]})`,
+                      }}
+                    >
+                      <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)',
+                        transition: 'background 0.2s',
+                      }} />
+                      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '16px 18px' }}>
+                        <div style={{ fontSize: '14px', color: '#e8e8e8', fontFamily: 'Georgia, serif', fontWeight: 300, marginBottom: '4px' }}>
+                          {relGenre.name}
+                        </div>
+                        <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.05em' }}>
+                          {reason}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

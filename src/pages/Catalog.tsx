@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { genres, categories, galleryImages, graphicalStyles, assetUrl, type GalleryImage } from '../data/genres'
+import { useUserProfile } from '../hooks/useUserProfile'
 import NavBar from '../components/NavBar'
 
 function getStoredColumns(): number {
@@ -136,6 +137,7 @@ function MasonryTile({ img, onClick }: { img: GalleryImage; onClick: () => void 
 export default function Catalog({ onSelect, onHome, onSearch, selectedCategory, onSelectCategory }: Props) {
   const [columns, setColumns] = useState(getStoredColumns)
   const [styleFilter, setStyleFilter] = useState('all')
+  const { profile } = useUserProfile()
 
   // Reset style filter when category changes
   useEffect(() => {
@@ -162,10 +164,18 @@ export default function Catalog({ onSelect, onHome, onSearch, selectedCategory, 
       .filter((s): s is string => Boolean(s))
   )]
 
-  // Final visible images — category + style, featured first
+  // Score an image by user profile: sum of visit counts for its genres
+  const profileScore = (img: GalleryImage) =>
+    img.genres.reduce((acc, gid) => acc + (profile.visits[gid] ?? 0), 0)
+
+  // Final visible images — category + style, featured first, then profile-boosted
   const visible = categoryFiltered
     .filter(img => styleFilter === 'all' || img.style === styleFilter)
-    .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
+    .sort((a, b) => {
+      const featuredDiff = (b.featured ? 1 : 0) - (a.featured ? 1 : 0)
+      if (featuredDiff !== 0) return featuredDiff
+      return profileScore(b) - profileScore(a)
+    })
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', background: 'var(--bg)' }}>
